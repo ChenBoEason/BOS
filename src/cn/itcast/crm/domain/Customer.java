@@ -1,7 +1,7 @@
 package cn.itcast.crm.domain;
 
 import java.io.Serializable;
-
+//增加注释
 public class Customer implements Serializable {
 	private Integer id;
 	private String name;
