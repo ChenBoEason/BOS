@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!--1.1开发模式  -->
+	<constant name="struts.devMode" value="false"/>
+	<constant name="struts.ui.theme" value="simple"/>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+	
+	
+	<package name="common" extends="struts-default">
+	
+		<!--配置拦截器  -->
+		<interceptors>
+			<interceptor name="BosLoginInterceptor" class="com.cb.bos.web.interceptor.BosLoginInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			
+			<interceptor-stack name="mystack">
+				<interceptor-ref name="BosLoginInterceptor"/>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>	
+		</interceptors>
+		<!--指定默认栈  -->
+		<default-interceptor-ref name="mystack"/>
+	
+	<global-results>
+		<result name="login">/login.jsp</result>
+		<result name="unauthorizedUrl">/unauthorizedUrl.html</result>
+	</global-results>
+	<!--全局异常捕获 跳转页面  -->
+	<global-exception-mappings>
+		<exception-mapping result="unauthorizedUrl" exception="org.apache.shiro.authz.AuthorizationException"></exception-mapping>
+	</global-exception-mappings>
+	
+		<!--全局通配符 返回成功直接跳转指定页面  -->
+		<action name="page_*_*">
+			<result type="dispatcher">/WEB-INF/pages/{1}/{2}.jsp</result>
+		</action>
+		
+		
+		<!--使用注解开发 class默认为action类名首字母小写 若controller定义了  则为定义的名字  称为ID  -->
+		<action name="userAction_*" class="userAction" method="{1}">
+			<result name="home">/index.jsp</result>
+			<result name="list">/WEB-INF/pages/admin/userlist.jsp</result>
+		</action>
+		
+		
+		<!--staff  -->
+		<action name="staffAction_*" class="staffAction" method="{1}">
+			<result name="list">/WEB-INF/pages/base/staff.jsp</result>
+		</action>
+		
+		
+		<!--区域管理  -->
+		<action name="regionAction_*" class="regionAction" method="{1}">
+			<result name="list">/WEB-INF/pages/base/region.jsp</result>
+		</action>
+		
+		
+		<!--分区管理  -->
+		<action name="subareaAction_*" class="subareaAction" method="{1}">
+			<result name="list">/WEB-INF/pages/base/subarea.jsp</result>
+		</action>
+		
+		
+		<!--定区管理  -->
+		<action name="decidedzoneAction_*" class="decidedzoneAction" method="{1}">
+			<result name="list">/WEB-INF/pages/base/decidedzone.jsp</result>
+		</action>
+		
+		
+		<!-- 业务受理 -->
+		<action name="noticebillAction_*" class="noticebillAction" method="{1}">
+			<result name="addUI">/WEB-INF/pages/qupai/noticebill_add.jsp</result>
+		</action>
+		
+		
+		<!--工作单管理  -->
+		<action name="workordermanageAction_*" class="workordermanageAction" method="{1}">	
+			<result name="list">/WEB-INF/pages/workflow/startransfer.jsp</result>
+			<result name="toList" type="redirectAction">workordermanageAction_list</result>
+		</action>
+		
+		
+		<!-- 权限管理 -->
+		<action name="functionAction_*" class="functionAction" method="{1}">
+			<result name="list">/WEB-INF/pages/admin/function.jsp</result>
+		</action>
+		
+		
+		<!-- 角色管理 -->
+		<action name="roleAction_*" class="roleAction" method="{1}">
+			<result name="list">/WEB-INF/pages/admin/role.jsp</result>
+		</action>
+		
+		
+		<!--流程定义管理  -->
+		<action name="processDefinitionAction_*" class="processDefinitionAction" method="{1}">
+			<result name="list">/WEB-INF/pages/workflow/processdefinition_list.jsp</result>
+			<result name="toList" type="redirectAction">
+				processDefinitionAction_list
+			</result>
+			<result name="viewpng" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">pngStream</param>
+			</result>
+		</action>
+		
+		
+		<!--流程定义管理  -->
+		<action name="processInstanceAction_*" class="processInstanceAction" method="{1}">
+			<result name="list">/WEB-INF/pages/workflow/processinstance.jsp</result>
+			<result name="showPng">/WEB-INF/pages/workflow/image.jsp</result>
+			<result name="viewImage" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">pngStream</param>
+			</result>
+		</action>
+		
+		<!--组任务管理  -->
+		<action name="taskAction_*" class="taskAction" method="{1}">
+			<result name="list">/WEB-INF/pages/workflow/grouptask.jsp</result>
+			<result name="toList" type="redirectAction">
+				taskAction_findGroupTask
+			</result>
+			<result name="listpersonTask">/WEB-INF/pages/workflow/personaltask.jsp</result>
+			<result name="toCheck">/WEB-INF/pages/workflow/check.jsp</result>
+			<result name="toPersonList" type="redirectAction">
+				taskAction_findPersonalTask
+			</result>
+		</action>
+	</package>
+</struts>
